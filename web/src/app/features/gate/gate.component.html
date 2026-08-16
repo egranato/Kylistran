@@ -1,0 +1,22 @@
+<div class="page gate">
+  <h1>Kylistran</h1>
+  <p class="gate__hint">Enter the password your author friend gave you.</p>
+
+  <form class="gate__form" (submit)="$event.preventDefault(); submit()">
+    <input
+      type="password"
+      name="password"
+      autocomplete="current-password"
+      placeholder="Password"
+      [ngModel]="password()"
+      (ngModelChange)="password.set($event)"
+    />
+    <button type="submit" [disabled]="checking()">
+      {{ checking() ? 'Checking…' : 'Enter' }}
+    </button>
+  </form>
+
+  @if (error()) {
+    <p class="gate__error">That password isn't right — try again.</p>
+  }
+</div>

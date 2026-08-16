@@ -1,0 +1,18 @@
+@if (book(); as book) {
+  <div class="page">
+    <p><a routerLink="/library">&larr; Library</a></p>
+    <h1>{{ book.title }}</h1>
+
+    <ul>
+      @for (chapter of book.chapters; track chapter.slug) {
+        <li>
+          <a [routerLink]="[chapter.slug]">{{ chapterTitle(chapter.title, $index + 1) }}</a>
+        </li>
+      }
+    </ul>
+  </div>
+} @else if (book() === null) {
+  <div class="page">
+    <p>That book couldn't be found.</p>
+  </div>
+}

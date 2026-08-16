@@ -1,0 +1,87 @@
+.editor {
+  max-width: 90ch;
+}
+
+.editor__header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+}
+
+.editor__logout {
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 0.4rem;
+  padding: 0.4rem 0.8rem;
+  cursor: pointer;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+}
+
+.editor__error {
+  color: var(--accent);
+}
+
+.editor__list {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  gap: 0.5rem;
+}
+
+.editor__row {
+  display: grid;
+  grid-template-columns: auto 1fr 12ch 1fr auto auto;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.editor__reorder {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+
+  button {
+    line-height: 1;
+    padding: 0.1rem 0.4rem;
+  }
+}
+
+input {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: 0.4rem;
+  padding: 0.4rem 0.6rem;
+}
+
+button {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: 0.4rem;
+  padding: 0.4rem 0.6rem;
+  cursor: pointer;
+
+  &:disabled {
+    opacity: 0.4;
+    cursor: default;
+  }
+}
+
+.editor__delete {
+  color: var(--accent);
+}
+
+.editor__new {
+  margin-top: 2rem;
+  display: grid;
+  gap: 0.5rem;
+  max-width: 40ch;
+
+  button {
+    justify-self: start;
+    background: var(--accent);
+    color: var(--bg);
+    border: none;
+    padding: 0.6rem 1.1rem;
+  }
+}

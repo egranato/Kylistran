@@ -1,0 +1,29 @@
+<div class="page gate">
+  <h1>Editor sign in</h1>
+
+  <form class="gate__form" (submit)="$event.preventDefault(); submit()">
+    <input
+      type="text"
+      name="username"
+      autocomplete="username"
+      placeholder="Username"
+      [ngModel]="username()"
+      (ngModelChange)="username.set($event)"
+    />
+    <input
+      type="password"
+      name="password"
+      autocomplete="current-password"
+      placeholder="Password"
+      [ngModel]="password()"
+      (ngModelChange)="password.set($event)"
+    />
+    <button type="submit" [disabled]="checking()">
+      {{ checking() ? 'Checking…' : 'Sign in' }}
+    </button>
+  </form>
+
+  @if (error()) {
+    <p class="gate__error">Wrong username or password.</p>
+  }
+</div>

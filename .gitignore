@@ -1,0 +1,35 @@
+# Environment
+.env
+api/.env
+
+# API (Go + SQLite)
+api/*.db
+api/*.db-journal
+api/*.db-wal
+api/*.db-shm
+api/server
+api/server.exe
+api/*.exe
+
+# Web (Angular)
+web/node_modules/
+web/dist/
+web/.angular/
+web/.firebase/
+firebase-debug.log
+firestore-debug.log
+ui-debug.log
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/*
+!.vscode/extensions.json
+.idea/

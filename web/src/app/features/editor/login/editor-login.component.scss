@@ -1,0 +1,39 @@
+.gate {
+  text-align: center;
+  padding-top: 4rem;
+}
+
+.gate__form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  align-items: center;
+  margin-top: 1.5rem;
+}
+
+.gate__form input {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: 0.4rem;
+  padding: 0.6rem 0.8rem;
+  width: 220px;
+}
+
+.gate__form button {
+  background: var(--accent);
+  color: var(--bg);
+  border: none;
+  border-radius: 0.4rem;
+  padding: 0.6rem 1.1rem;
+  cursor: pointer;
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: default;
+  }
+}
+
+.gate__error {
+  color: var(--accent);
+  margin-top: 1rem;
+}

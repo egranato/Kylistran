@@ -1,0 +1,38 @@
+<div class="page editor">
+  <div class="editor__header">
+    <div>
+      <p><a routerLink="/editor">&larr; Books</a></p>
+      <h1>{{ bookTitle() || 'Chapters' }}</h1>
+    </div>
+  </div>
+
+  @if (error()) {
+    <p class="editor__error">{{ error() }}</p>
+  }
+
+  <ul class="editor__list">
+    @for (chapter of chapters(); track chapter.id; let i = $index) {
+      <li class="editor__row">
+        <div class="editor__reorder">
+          <button type="button" (click)="move(i, -1)" [disabled]="i === 0">&uarr;</button>
+          <button type="button" (click)="move(i, 1)" [disabled]="i === chapters().length - 1">&darr;</button>
+        </div>
+        <a [routerLink]="[chapter.id]">{{ chapter.title }}</a>
+        <span>{{ chapter.slug }}</span>
+        <button type="button" class="editor__delete" (click)="remove(chapter)">Delete</button>
+      </li>
+    }
+  </ul>
+
+  <form class="editor__new" (submit)="$event.preventDefault(); create()">
+    <h2>New chapter</h2>
+    <input
+      [ngModel]="newTitle()"
+      (ngModelChange)="newTitle.set($event)"
+      name="newTitle"
+      placeholder="Title"
+    />
+    <input [ngModel]="newSlug()" (ngModelChange)="newSlug.set($event)" name="newSlug" placeholder="slug" />
+    <button type="submit">Create</button>
+  </form>
+</div>

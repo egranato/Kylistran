@@ -1,0 +1,103 @@
+.editor {
+  max-width: 90ch;
+}
+
+.editor__back {
+  background: none;
+  border: none;
+  color: var(--accent);
+  cursor: pointer;
+  font: inherit;
+  padding: 0;
+}
+
+.editor__error {
+  color: var(--accent);
+}
+
+.chapter-editor__meta {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+
+  label {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+  }
+}
+
+input,
+textarea {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: 0.4rem;
+  padding: 0.5rem 0.7rem;
+  font: inherit;
+  color: var(--text);
+}
+
+.chapter-editor__body-label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.chapter-editor__body {
+  font-family: ui-monospace, monospace;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  resize: vertical;
+}
+
+.chapter-editor__image,
+.chapter-editor__music {
+  margin-top: 1.5rem;
+
+  h2 {
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+  }
+}
+
+.chapter-editor__image-row,
+.chapter-editor__music-row {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+
+  input {
+    flex: 1;
+  }
+}
+
+.chapter-editor__hint {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+}
+
+button {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: 0.4rem;
+  padding: 0.5rem 0.9rem;
+  cursor: pointer;
+}
+
+.chapter-editor__status {
+  color: var(--accent);
+}
+
+.chapter-editor__save {
+  margin-top: 1.5rem;
+  background: var(--accent);
+  color: var(--bg);
+  border: none;
+  padding: 0.7rem 1.4rem;
+  font-size: 1rem;
+}

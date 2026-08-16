@@ -1,0 +1,44 @@
+<div class="page editor">
+  <div class="editor__header">
+    <h1>Editor</h1>
+    <button type="button" class="editor__logout" (click)="logout()">Sign out</button>
+  </div>
+
+  @if (error()) {
+    <p class="editor__error">{{ error() }}</p>
+  }
+
+  <ul class="editor__list">
+    @for (book of books(); track book.id; let i = $index) {
+      <li class="editor__row">
+        <div class="editor__reorder">
+          <button type="button" (click)="move(i, -1)" [disabled]="i === 0">&uarr;</button>
+          <button type="button" (click)="move(i, 1)" [disabled]="i === books().length - 1">&darr;</button>
+        </div>
+        <input [(ngModel)]="book.title" (blur)="save(book)" placeholder="Title" />
+        <input [(ngModel)]="book.slug" (blur)="save(book)" placeholder="slug" />
+        <input [(ngModel)]="book.description" (blur)="save(book)" placeholder="Description (optional)" />
+        <a [routerLink]="[book.id]">Chapters &rarr;</a>
+        <button type="button" class="editor__delete" (click)="remove(book)">Delete</button>
+      </li>
+    }
+  </ul>
+
+  <form class="editor__new" (submit)="$event.preventDefault(); create()">
+    <h2>New book</h2>
+    <input
+      [ngModel]="newTitle()"
+      (ngModelChange)="newTitle.set($event)"
+      name="newTitle"
+      placeholder="Title"
+    />
+    <input [ngModel]="newSlug()" (ngModelChange)="newSlug.set($event)" name="newSlug" placeholder="slug" />
+    <input
+      [ngModel]="newDescription()"
+      (ngModelChange)="newDescription.set($event)"
+      name="newDescription"
+      placeholder="Description (optional)"
+    />
+    <button type="submit">Create</button>
+  </form>
+</div>

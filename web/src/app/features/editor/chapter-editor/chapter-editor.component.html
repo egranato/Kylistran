@@ -1,0 +1,84 @@
+@if (!loaded() && error()) {
+  <div class="page editor">
+    <p><button type="button" class="editor__back" (click)="backToChapters()">&larr; Chapters</button></p>
+    <p class="editor__error">{{ error() }}</p>
+  </div>
+}
+@if (loaded()) {
+  <div class="page editor">
+    <p><button type="button" class="editor__back" (click)="backToChapters()">&larr; Chapters</button></p>
+
+    <div class="chapter-editor__meta">
+      <label>
+        Title
+        <input [ngModel]="title()" (ngModelChange)="title.set($event)" name="title" />
+      </label>
+      <label>
+        Slug
+        <input [ngModel]="slug()" (ngModelChange)="slug.set($event)" name="slug" />
+      </label>
+    </div>
+
+    <label class="chapter-editor__body-label">
+      Chapter text — one blank line between paragraphs
+      <textarea
+        #textareaEl
+        class="chapter-editor__body"
+        [ngModel]="body()"
+        (ngModelChange)="body.set($event)"
+        name="body"
+        rows="24"
+      ></textarea>
+    </label>
+
+    <div class="chapter-editor__image">
+      <h2>Insert image at cursor</h2>
+      <div class="chapter-editor__image-row">
+        <input
+          [ngModel]="imageSrc()"
+          (ngModelChange)="imageSrc.set($event)"
+          name="imageSrc"
+          placeholder="/images/example.png"
+        />
+        <input
+          [ngModel]="imageAlt()"
+          (ngModelChange)="imageAlt.set($event)"
+          name="imageAlt"
+          placeholder="Alt text"
+        />
+        <input
+          [ngModel]="imageCaption()"
+          (ngModelChange)="imageCaption.set($event)"
+          name="imageCaption"
+          placeholder="Caption (optional)"
+        />
+        <button type="button" (click)="insertImage()">Insert</button>
+      </div>
+      <p class="chapter-editor__hint">
+        Image files must already exist under <code>public/images/</code> in the app and be deployed — this
+        only references a path, it doesn't upload a file.
+      </p>
+    </div>
+
+    <div class="chapter-editor__music">
+      <h2>Music links</h2>
+      @for (link of musicLinks(); track $index) {
+        <div class="chapter-editor__music-row">
+          <input [(ngModel)]="link.url" name="musicUrl{{ $index }}" placeholder="https://..." />
+          <input [(ngModel)]="link.label" name="musicLabel{{ $index }}" placeholder="Label (optional)" />
+          <button type="button" (click)="removeMusicLink($index)">Remove</button>
+        </div>
+      }
+      <button type="button" (click)="addMusicLink()">+ Add music link</button>
+    </div>
+
+    @if (error()) {
+      <p class="editor__error">{{ error() }}</p>
+    }
+    @if (status()) {
+      <p class="chapter-editor__status">{{ status() }}</p>
+    }
+
+    <button type="button" class="chapter-editor__save" (click)="save()">Save</button>
+  </div>
+}
