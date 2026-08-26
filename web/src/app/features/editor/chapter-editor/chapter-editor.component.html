@@ -6,7 +6,19 @@
 }
 @if (loaded()) {
   <div class="page editor">
-    <p><button type="button" class="editor__back" (click)="backToChapters()">&larr; Chapters</button></p>
+    <div class="chapter-editor__toolbar">
+      <button type="button" class="editor__back" (click)="backToChapters()">&larr; Chapters</button>
+      @if (bookSlug()) {
+        <a
+          class="chapter-editor__view-live"
+          [routerLink]="['/library', bookSlug(), liveSlug()]"
+          target="_blank"
+          rel="noopener"
+        >
+          View live &#8599;
+        </a>
+      }
+    </div>
 
     <div class="chapter-editor__meta">
       <label>

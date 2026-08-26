@@ -1,6 +1,6 @@
 import { Component, ElementRef, HostListener, effect, inject, input, signal, viewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 import { MusicLink } from '../../../content/content.models';
 import { EditorContentService } from '../editor-content.service';
@@ -9,7 +9,7 @@ import { imageMarker, parseBlocks, serializeBlocks } from './block-parser';
 @Component({
   selector: 'app-chapter-editor',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, RouterLink],
   templateUrl: './chapter-editor.component.html',
   styleUrl: './chapter-editor.component.scss',
 })
@@ -28,6 +28,12 @@ export class ChapterEditorComponent {
   readonly body = signal('');
   readonly musicLinks = signal<MusicLink[]>([]);
 
+  // Tracks the slug actually live on the public site, separate from the
+  // (possibly unsaved) `slug` edit field, so the "View live" link is never
+  // built from a value that hasn't been saved yet.
+  readonly bookSlug = signal('');
+  readonly liveSlug = signal('');
+
   readonly imageSrc = signal('');
   readonly imageAlt = signal('');
   readonly imageCaption = signal('');
@@ -45,11 +51,16 @@ export class ChapterEditorComponent {
 
   private async load(chapterId: number): Promise<void> {
     try {
-      const chapter = await firstValueFrom(this.content.getChapter(chapterId));
+      const [chapter, books] = await Promise.all([
+        firstValueFrom(this.content.getChapter(chapterId)),
+        firstValueFrom(this.content.listBooks()),
+      ]);
       this.slug.set(chapter.slug);
       this.title.set(chapter.title);
       this.body.set(serializeBlocks(chapter.paragraphs));
       this.musicLinks.set(chapter.musicLinks ?? []);
+      this.bookSlug.set(books.find((b) => b.id === Number(this.bookId()))?.slug ?? '');
+      this.liveSlug.set(chapter.slug);
       this.loaded.set(true);
     } catch {
       this.error.set('Failed to load chapter.');
@@ -114,6 +125,7 @@ export class ChapterEditorComponent {
           musicLinks: this.musicLinks().filter((link) => link.url.trim()),
         }),
       );
+      this.liveSlug.set(slug);
       this.error.set(null);
       this.status.set('Saved — live for readers now.');
       setTimeout(() => this.status.set(null), 3000);
