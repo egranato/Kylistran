@@ -17,8 +17,8 @@
           <button type="button" (click)="move(i, -1)" [disabled]="i === 0">&uarr;</button>
           <button type="button" (click)="move(i, 1)" [disabled]="i === chapters().length - 1">&darr;</button>
         </div>
-        <a [routerLink]="[chapter.id]">{{ chapter.title }}</a>
-        <span>{{ chapter.slug }}</span>
+        <a class="editor__chapter-link" [routerLink]="[chapter.id]">{{ chapter.title }}</a>
+        <span class="editor__slug">{{ chapter.slug }}</span>
         <button type="button" class="editor__delete" (click)="remove(chapter)">Delete</button>
       </li>
     }

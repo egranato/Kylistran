@@ -54,4 +54,8 @@ export class ChapterReaderComponent {
   isImage(block: ChapterBlock): block is ChapterImage {
     return typeof block === 'object';
   }
+
+  isAuthorComment(block: ChapterBlock): boolean {
+    return typeof block === 'string' && block.trimStart().startsWith('#');
+  }
 }

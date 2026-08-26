@@ -3,6 +3,7 @@ package db
 import (
 	"database/sql"
 	_ "embed"
+	"strings"
 )
 
 //go:embed schema.sql
@@ -17,7 +18,21 @@ func Open(path string) (*sql.DB, error) {
 		conn.Close()
 		return nil, err
 	}
+	if err := migrate(conn); err != nil {
+		conn.Close()
+		return nil, err
+	}
 	return conn, nil
+}
+
+// migrate applies schema changes CREATE TABLE IF NOT EXISTS can't retrofit
+// onto databases that were created before the change.
+func migrate(conn *sql.DB) error {
+	if _, err := conn.Exec(`ALTER TABLE books ADD COLUMN hidden INTEGER NOT NULL DEFAULT 0`); err != nil &&
+		!strings.Contains(err.Error(), "duplicate column name") {
+		return err
+	}
+	return nil
 }
 
 // SeedAdmin creates the initial author account if no users exist yet.

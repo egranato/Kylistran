@@ -1,4 +1,4 @@
-import { Component, ElementRef, effect, inject, input, signal, viewChild } from '@angular/core';
+import { Component, ElementRef, HostListener, effect, inject, input, signal, viewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
@@ -88,6 +88,14 @@ export class ChapterEditorComponent {
 
   removeMusicLink(index: number): void {
     this.musicLinks.set(this.musicLinks().filter((_, i) => i !== index));
+  }
+
+  @HostListener('window:keydown', ['$event'])
+  handleKeydown(event: KeyboardEvent): void {
+    if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 's') {
+      event.preventDefault();
+      void this.save();
+    }
   }
 
   async save(): Promise<void> {

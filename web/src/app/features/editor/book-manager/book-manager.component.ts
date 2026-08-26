@@ -42,7 +42,7 @@ export class BookManagerComponent {
     if (!slug || !title) return;
     try {
       await firstValueFrom(
-        this.content.createBook({ slug, title, description: this.newDescription().trim() }),
+        this.content.createBook({ slug, title, description: this.newDescription().trim(), hidden: false }),
       );
       this.newSlug.set('');
       this.newTitle.set('');
@@ -55,7 +55,12 @@ export class BookManagerComponent {
   }
 
   async save(book: AdminBookSummary): Promise<void> {
-    const input: BookInput = { slug: book.slug, title: book.title, description: book.description ?? '' };
+    const input: BookInput = {
+      slug: book.slug,
+      title: book.title,
+      description: book.description ?? '',
+      hidden: book.hidden,
+    };
     try {
       await firstValueFrom(this.content.updateBook(book.id, input));
       this.error.set(null);

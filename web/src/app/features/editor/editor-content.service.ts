@@ -9,6 +9,7 @@ export interface AdminBookSummary {
   slug: string;
   title: string;
   description?: string;
+  hidden: boolean;
 }
 
 export interface AdminChapterSummary {
@@ -30,6 +31,7 @@ export interface BookInput {
   slug: string;
   title: string;
   description: string;
+  hidden: boolean;
 }
 
 export interface ChapterCreateInput {

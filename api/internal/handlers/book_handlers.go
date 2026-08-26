@@ -10,7 +10,7 @@ import (
 )
 
 func (h *Handlers) listBooks(w http.ResponseWriter, r *http.Request) {
-	rows, err := h.db.Query(`SELECT slug, title, description FROM books ORDER BY position, id`)
+	rows, err := h.db.Query(`SELECT slug, title, description FROM books WHERE hidden = 0 ORDER BY position, id`)
 	if err != nil {
 		writeError(w, http.StatusInternalServerError, "failed to list books")
 		return
@@ -64,7 +64,7 @@ func (h *Handlers) getBookDetail(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handlers) listAdminBooks(w http.ResponseWriter, r *http.Request) {
-	rows, err := h.db.Query(`SELECT id, slug, title, description FROM books ORDER BY position, id`)
+	rows, err := h.db.Query(`SELECT id, slug, title, description, hidden FROM books ORDER BY position, id`)
 	if err != nil {
 		writeError(w, http.StatusInternalServerError, "failed to list books")
 		return
@@ -74,7 +74,7 @@ func (h *Handlers) listAdminBooks(w http.ResponseWriter, r *http.Request) {
 	books := []models.AdminBookSummary{}
 	for rows.Next() {
 		var b models.AdminBookSummary
-		if err := rows.Scan(&b.ID, &b.Slug, &b.Title, &b.Description); err != nil {
+		if err := rows.Scan(&b.ID, &b.Slug, &b.Title, &b.Description, &b.Hidden); err != nil {
 			writeError(w, http.StatusInternalServerError, "failed to read books")
 			return
 		}
@@ -87,6 +87,7 @@ type bookInput struct {
 	Slug        string `json:"slug"`
 	Title       string `json:"title"`
 	Description string `json:"description"`
+	Hidden      bool   `json:"hidden"`
 }
 
 func (h *Handlers) createBook(w http.ResponseWriter, r *http.Request) {
@@ -99,8 +100,8 @@ func (h *Handlers) createBook(w http.ResponseWriter, r *http.Request) {
 	var position int
 	h.db.QueryRow(`SELECT COALESCE(MAX(position), -1) + 1 FROM books`).Scan(&position)
 
-	res, err := h.db.Exec(`INSERT INTO books (slug, title, description, position) VALUES (?, ?, ?, ?)`,
-		in.Slug, in.Title, in.Description, position)
+	res, err := h.db.Exec(`INSERT INTO books (slug, title, description, position, hidden) VALUES (?, ?, ?, ?, ?)`,
+		in.Slug, in.Title, in.Description, position, in.Hidden)
 	if err != nil {
 		writeError(w, http.StatusConflict, "a book with that slug already exists")
 		return
@@ -123,8 +124,8 @@ func (h *Handlers) updateBook(w http.ResponseWriter, r *http.Request) {
 	}
 
 	res, err := h.db.Exec(
-		`UPDATE books SET slug = ?, title = ?, description = ?, updated_at = datetime('now') WHERE id = ?`,
-		in.Slug, in.Title, in.Description, id,
+		`UPDATE books SET slug = ?, title = ?, description = ?, hidden = ?, updated_at = datetime('now') WHERE id = ?`,
+		in.Slug, in.Title, in.Description, in.Hidden, id,
 	)
 	if err != nil {
 		writeError(w, http.StatusConflict, "a book with that slug already exists")

@@ -11,7 +11,7 @@
             <figcaption>{{ block.caption }}</figcaption>
           }
         </figure>
-      } @else {
+      } @else if (!isAuthorComment(block)) {
         <p>{{ block }}</p>
       }
     }

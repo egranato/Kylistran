@@ -75,3 +75,51 @@ button {
     padding: 0.6rem 1.1rem;
   }
 }
+
+@media (max-width: 640px) {
+  .editor__header {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .editor__row {
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas:
+      'reorder reorder'
+      'title title'
+      'slug delete';
+    gap: 0.6rem;
+    border: 1px solid var(--border);
+    border-radius: 0.6rem;
+    padding: 0.75rem;
+  }
+
+  .editor__reorder {
+    grid-area: reorder;
+    flex-direction: row;
+
+    button {
+      flex: 1;
+      min-height: 2.5rem;
+    }
+  }
+
+  .editor__chapter-link {
+    grid-area: title;
+  }
+
+  .editor__slug {
+    grid-area: slug;
+    align-self: center;
+    color: var(--text-muted);
+  }
+
+  .editor__delete {
+    grid-area: delete;
+  }
+
+  input,
+  button {
+    min-height: 2.5rem;
+  }
+}

@@ -31,9 +31,18 @@
 
 .editor__row {
   display: grid;
-  grid-template-columns: auto 1fr 12ch 1fr auto auto;
+  grid-template-columns: auto 1fr 12ch 1fr auto auto auto;
   gap: 0.5rem;
   align-items: center;
+}
+
+.editor__hidden-toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  white-space: nowrap;
 }
 
 .editor__reorder {
@@ -83,5 +92,78 @@ button {
     color: var(--bg);
     border: none;
     padding: 0.6rem 1.1rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .editor__header {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .editor__row {
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas:
+      'reorder reorder'
+      'title title'
+      'slug slug'
+      'description description'
+      'toggle toggle'
+      'chapters delete';
+    gap: 0.6rem;
+    border: 1px solid var(--border);
+    border-radius: 0.6rem;
+    padding: 0.75rem;
+  }
+
+  .editor__reorder {
+    grid-area: reorder;
+    flex-direction: row;
+
+    button {
+      flex: 1;
+      min-height: 2.5rem;
+    }
+  }
+
+  .editor__title {
+    grid-area: title;
+  }
+
+  .editor__slug {
+    grid-area: slug;
+  }
+
+  .editor__description {
+    grid-area: description;
+  }
+
+  .editor__hidden-toggle {
+    grid-area: toggle;
+    font-size: 1rem;
+
+    input[type='checkbox'] {
+      width: 1.25rem;
+      height: 1.25rem;
+    }
+  }
+
+  .editor__chapters-link {
+    grid-area: chapters;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 2.5rem;
+    border: 1px solid var(--border);
+    border-radius: 0.4rem;
+  }
+
+  .editor__delete {
+    grid-area: delete;
+  }
+
+  input:not([type='checkbox']),
+  button {
+    min-height: 2.5rem;
   }
 }

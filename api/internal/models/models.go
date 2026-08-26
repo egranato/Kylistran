@@ -72,7 +72,8 @@ type Chapter struct {
 // AdminBookSummary/AdminChapterSummary add the numeric ids the editor needs
 // for admin CRUD/reorder endpoints, without leaking ids into public reads.
 type AdminBookSummary struct {
-	ID int64 `json:"id"`
+	ID     int64 `json:"id"`
+	Hidden bool  `json:"hidden"`
 	BookSummary
 }
 

@@ -15,10 +15,19 @@
           <button type="button" (click)="move(i, -1)" [disabled]="i === 0">&uarr;</button>
           <button type="button" (click)="move(i, 1)" [disabled]="i === books().length - 1">&darr;</button>
         </div>
-        <input [(ngModel)]="book.title" (blur)="save(book)" placeholder="Title" />
-        <input [(ngModel)]="book.slug" (blur)="save(book)" placeholder="slug" />
-        <input [(ngModel)]="book.description" (blur)="save(book)" placeholder="Description (optional)" />
-        <a [routerLink]="[book.id]">Chapters &rarr;</a>
+        <input class="editor__title" [(ngModel)]="book.title" (blur)="save(book)" placeholder="Title" />
+        <input class="editor__slug" [(ngModel)]="book.slug" (blur)="save(book)" placeholder="slug" />
+        <input
+          class="editor__description"
+          [(ngModel)]="book.description"
+          (blur)="save(book)"
+          placeholder="Description (optional)"
+        />
+        <label class="editor__hidden-toggle">
+          <input type="checkbox" [(ngModel)]="book.hidden" (change)="save(book)" />
+          Hidden
+        </label>
+        <a class="editor__chapters-link" [routerLink]="[book.id]">Chapters &rarr;</a>
         <button type="button" class="editor__delete" (click)="remove(book)">Delete</button>
       </li>
     }
