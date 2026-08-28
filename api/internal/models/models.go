@@ -46,9 +46,24 @@ type MusicLink struct {
 	Label string `json:"label,omitempty"`
 }
 
+// UniverseRef is the read-only display shape embedded wherever a universe
+// needs to be shown without exposing its numeric id (public book summaries,
+// admin character/book rows).
+type UniverseRef struct {
+	Slug string `json:"slug"`
+	Name string `json:"name"`
+}
+
 type BookSummary struct {
+	Slug        string       `json:"slug"`
+	Title       string       `json:"title"`
+	Description string       `json:"description,omitempty"`
+	Universe    *UniverseRef `json:"universe,omitempty"`
+}
+
+type Universe struct {
 	Slug        string `json:"slug"`
-	Title       string `json:"title"`
+	Name        string `json:"name"`
 	Description string `json:"description,omitempty"`
 }
 
@@ -72,9 +87,30 @@ type Chapter struct {
 // AdminBookSummary/AdminChapterSummary add the numeric ids the editor needs
 // for admin CRUD/reorder endpoints, without leaking ids into public reads.
 type AdminBookSummary struct {
-	ID     int64 `json:"id"`
-	Hidden bool  `json:"hidden"`
+	ID         int64  `json:"id"`
+	Hidden     bool   `json:"hidden"`
+	UniverseID *int64 `json:"universeId,omitempty"`
 	BookSummary
+}
+
+type AdminUniverseSummary struct {
+	ID int64 `json:"id"`
+	Universe
+}
+
+type AdminCharacterSummary struct {
+	ID         int64        `json:"id"`
+	Name       string       `json:"name"`
+	Position   int          `json:"position"`
+	UniverseID *int64       `json:"universeId,omitempty"`
+	Universe   *UniverseRef `json:"universe,omitempty"`
+}
+
+type AdminCharacter struct {
+	ID         int64  `json:"id"`
+	Name       string `json:"name"`
+	Notes      string `json:"notes"`
+	UniverseID *int64 `json:"universeId,omitempty"`
 }
 
 type AdminChapterSummary struct {

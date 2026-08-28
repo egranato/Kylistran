@@ -8,22 +8,6 @@
   justify-content: space-between;
 }
 
-.editor__header-links {
-  display: flex;
-  align-items: baseline;
-  gap: 1rem;
-}
-
-.editor__logout {
-  background: none;
-  border: 1px solid var(--border);
-  border-radius: 0.4rem;
-  padding: 0.4rem 0.8rem;
-  cursor: pointer;
-  color: var(--text-muted);
-  font-size: 0.85rem;
-}
-
 .editor__error {
   color: var(--accent);
 }
@@ -37,18 +21,9 @@
 
 .editor__row {
   display: grid;
-  grid-template-columns: auto 1fr 12ch 1fr auto auto auto auto;
+  grid-template-columns: auto 1fr 12ch 1fr auto;
   gap: 0.5rem;
   align-items: center;
-}
-
-.editor__hidden-toggle {
-  display: flex;
-  align-items: center;
-  gap: 0.3rem;
-  font-size: 0.85rem;
-  color: var(--text-muted);
-  white-space: nowrap;
 }
 
 .editor__reorder {
@@ -62,8 +37,7 @@
   }
 }
 
-input,
-select {
+input {
   background: var(--bg-elevated);
   border: 1px solid var(--border);
   border-radius: 0.4rem;
@@ -112,12 +86,10 @@ button {
     grid-template-columns: 1fr 1fr;
     grid-template-areas:
       'reorder reorder'
-      'title title'
+      'name name'
       'slug slug'
       'description description'
-      'toggle toggle'
-      'universe universe'
-      'chapters delete';
+      'delete delete';
     gap: 0.6rem;
     border: 1px solid var(--border);
     border-radius: 0.6rem;
@@ -134,8 +106,8 @@ button {
     }
   }
 
-  .editor__title {
-    grid-area: title;
+  .editor__name {
+    grid-area: name;
   }
 
   .editor__slug {
@@ -146,36 +118,11 @@ button {
     grid-area: description;
   }
 
-  .editor__hidden-toggle {
-    grid-area: toggle;
-    font-size: 1rem;
-
-    input[type='checkbox'] {
-      width: 1.25rem;
-      height: 1.25rem;
-    }
-  }
-
-  .editor__universe {
-    grid-area: universe;
-  }
-
-  .editor__chapters-link {
-    grid-area: chapters;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 2.5rem;
-    border: 1px solid var(--border);
-    border-radius: 0.4rem;
-  }
-
   .editor__delete {
     grid-area: delete;
   }
 
-  input:not([type='checkbox']),
-  select,
+  input,
   button {
     min-height: 2.5rem;
   }

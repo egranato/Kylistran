@@ -8,22 +8,6 @@
   justify-content: space-between;
 }
 
-.editor__header-links {
-  display: flex;
-  align-items: baseline;
-  gap: 1rem;
-}
-
-.editor__logout {
-  background: none;
-  border: 1px solid var(--border);
-  border-radius: 0.4rem;
-  padding: 0.4rem 0.8rem;
-  cursor: pointer;
-  color: var(--text-muted);
-  font-size: 0.85rem;
-}
-
 .editor__error {
   color: var(--accent);
 }
@@ -37,18 +21,14 @@
 
 .editor__row {
   display: grid;
-  grid-template-columns: auto 1fr 12ch 1fr auto auto auto auto;
-  gap: 0.5rem;
+  grid-template-columns: auto 1fr 12ch auto;
+  gap: 0.75rem;
   align-items: center;
 }
 
-.editor__hidden-toggle {
-  display: flex;
-  align-items: center;
-  gap: 0.3rem;
-  font-size: 0.85rem;
+.editor__universe {
   color: var(--text-muted);
-  white-space: nowrap;
+  font-size: 0.85rem;
 }
 
 .editor__reorder {
@@ -112,12 +92,8 @@ button {
     grid-template-columns: 1fr 1fr;
     grid-template-areas:
       'reorder reorder'
-      'title title'
-      'slug slug'
-      'description description'
-      'toggle toggle'
-      'universe universe'
-      'chapters delete';
+      'name name'
+      'universe delete';
     gap: 0.6rem;
     border: 1px solid var(--border);
     border-radius: 0.6rem;
@@ -134,47 +110,20 @@ button {
     }
   }
 
-  .editor__title {
-    grid-area: title;
-  }
-
-  .editor__slug {
-    grid-area: slug;
-  }
-
-  .editor__description {
-    grid-area: description;
-  }
-
-  .editor__hidden-toggle {
-    grid-area: toggle;
-    font-size: 1rem;
-
-    input[type='checkbox'] {
-      width: 1.25rem;
-      height: 1.25rem;
-    }
+  .editor__character-link {
+    grid-area: name;
   }
 
   .editor__universe {
     grid-area: universe;
-  }
-
-  .editor__chapters-link {
-    grid-area: chapters;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 2.5rem;
-    border: 1px solid var(--border);
-    border-radius: 0.4rem;
+    align-self: center;
   }
 
   .editor__delete {
     grid-area: delete;
   }
 
-  input:not([type='checkbox']),
+  input,
   select,
   button {
     min-height: 2.5rem;

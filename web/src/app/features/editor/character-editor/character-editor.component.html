@@ -1,0 +1,47 @@
+@if (!loaded() && error()) {
+  <div class="page editor">
+    <p><button type="button" class="editor__back" (click)="backToCharacters()">&larr; Characters</button></p>
+    <p class="editor__error">{{ error() }}</p>
+  </div>
+}
+@if (loaded()) {
+  <div class="page editor">
+    <p><button type="button" class="editor__back" (click)="backToCharacters()">&larr; Characters</button></p>
+
+    <div class="character-editor__meta">
+      <label>
+        Name
+        <input [ngModel]="name()" (ngModelChange)="name.set($event)" name="name" />
+      </label>
+      <label>
+        Universe
+        <select [ngModel]="universeId()" (ngModelChange)="universeId.set($event)" name="universeId">
+          <option [ngValue]="null">No universe</option>
+          @for (universe of universes(); track universe.id) {
+            <option [ngValue]="universe.id">{{ universe.name }}</option>
+          }
+        </select>
+      </label>
+    </div>
+
+    <label class="character-editor__notes-label">
+      Notes
+      <textarea
+        class="character-editor__notes"
+        [ngModel]="notes()"
+        (ngModelChange)="notes.set($event)"
+        name="notes"
+        rows="24"
+      ></textarea>
+    </label>
+
+    @if (error()) {
+      <p class="editor__error">{{ error() }}</p>
+    }
+    @if (status()) {
+      <p class="character-editor__status">{{ status() }}</p>
+    }
+
+    <button type="button" class="character-editor__save" (click)="save()">Save</button>
+  </div>
+}

@@ -19,10 +19,16 @@ export interface Chapter {
   musicLinks?: MusicLink[];
 }
 
+export interface UniverseRef {
+  slug: string;
+  name: string;
+}
+
 export interface BookSummary {
   slug: string;
   title: string;
   description?: string;
+  universe?: UniverseRef;
 }
 
 export interface ChapterSummary {

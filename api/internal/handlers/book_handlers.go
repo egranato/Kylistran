@@ -10,7 +10,10 @@ import (
 )
 
 func (h *Handlers) listBooks(w http.ResponseWriter, r *http.Request) {
-	rows, err := h.db.Query(`SELECT slug, title, description FROM books WHERE hidden = 0 ORDER BY position, id`)
+	rows, err := h.db.Query(
+		`SELECT b.slug, b.title, b.description, u.slug, u.name
+		 FROM books b LEFT JOIN universes u ON u.id = b.universe_id
+		 WHERE b.hidden = 0 ORDER BY b.position, b.id`)
 	if err != nil {
 		writeError(w, http.StatusInternalServerError, "failed to list books")
 		return
@@ -20,9 +23,13 @@ func (h *Handlers) listBooks(w http.ResponseWriter, r *http.Request) {
 	books := []models.BookSummary{}
 	for rows.Next() {
 		var b models.BookSummary
-		if err := rows.Scan(&b.Slug, &b.Title, &b.Description); err != nil {
+		var universeSlug, universeName sql.NullString
+		if err := rows.Scan(&b.Slug, &b.Title, &b.Description, &universeSlug, &universeName); err != nil {
 			writeError(w, http.StatusInternalServerError, "failed to read books")
 			return
+		}
+		if universeSlug.Valid {
+			b.Universe = &models.UniverseRef{Slug: universeSlug.String, Name: universeName.String}
 		}
 		books = append(books, b)
 	}
@@ -64,7 +71,10 @@ func (h *Handlers) getBookDetail(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handlers) listAdminBooks(w http.ResponseWriter, r *http.Request) {
-	rows, err := h.db.Query(`SELECT id, slug, title, description, hidden FROM books ORDER BY position, id`)
+	rows, err := h.db.Query(
+		`SELECT b.id, b.slug, b.title, b.description, b.hidden, b.universe_id, u.slug, u.name
+		 FROM books b LEFT JOIN universes u ON u.id = b.universe_id
+		 ORDER BY b.position, b.id`)
 	if err != nil {
 		writeError(w, http.StatusInternalServerError, "failed to list books")
 		return
@@ -74,9 +84,16 @@ func (h *Handlers) listAdminBooks(w http.ResponseWriter, r *http.Request) {
 	books := []models.AdminBookSummary{}
 	for rows.Next() {
 		var b models.AdminBookSummary
-		if err := rows.Scan(&b.ID, &b.Slug, &b.Title, &b.Description, &b.Hidden); err != nil {
+		var universeID sql.NullInt64
+		var universeSlug, universeName sql.NullString
+		if err := rows.Scan(&b.ID, &b.Slug, &b.Title, &b.Description, &b.Hidden, &universeID, &universeSlug, &universeName); err != nil {
 			writeError(w, http.StatusInternalServerError, "failed to read books")
 			return
+		}
+		if universeID.Valid {
+			id := universeID.Int64
+			b.UniverseID = &id
+			b.Universe = &models.UniverseRef{Slug: universeSlug.String, Name: universeName.String}
 		}
 		books = append(books, b)
 	}
@@ -88,6 +105,7 @@ type bookInput struct {
 	Title       string `json:"title"`
 	Description string `json:"description"`
 	Hidden      bool   `json:"hidden"`
+	UniverseID  *int64 `json:"universeId"`
 }
 
 func (h *Handlers) createBook(w http.ResponseWriter, r *http.Request) {
@@ -100,8 +118,8 @@ func (h *Handlers) createBook(w http.ResponseWriter, r *http.Request) {
 	var position int
 	h.db.QueryRow(`SELECT COALESCE(MAX(position), -1) + 1 FROM books`).Scan(&position)
 
-	res, err := h.db.Exec(`INSERT INTO books (slug, title, description, position, hidden) VALUES (?, ?, ?, ?, ?)`,
-		in.Slug, in.Title, in.Description, position, in.Hidden)
+	res, err := h.db.Exec(`INSERT INTO books (slug, title, description, position, hidden, universe_id) VALUES (?, ?, ?, ?, ?, ?)`,
+		in.Slug, in.Title, in.Description, position, in.Hidden, in.UniverseID)
 	if err != nil {
 		writeError(w, http.StatusConflict, "a book with that slug already exists")
 		return
@@ -124,8 +142,8 @@ func (h *Handlers) updateBook(w http.ResponseWriter, r *http.Request) {
 	}
 
 	res, err := h.db.Exec(
-		`UPDATE books SET slug = ?, title = ?, description = ?, hidden = ?, updated_at = datetime('now') WHERE id = ?`,
-		in.Slug, in.Title, in.Description, in.Hidden, id,
+		`UPDATE books SET slug = ?, title = ?, description = ?, hidden = ?, universe_id = ?, updated_at = datetime('now') WHERE id = ?`,
+		in.Slug, in.Title, in.Description, in.Hidden, in.UniverseID, id,
 	)
 	if err != nil {
 		writeError(w, http.StatusConflict, "a book with that slug already exists")

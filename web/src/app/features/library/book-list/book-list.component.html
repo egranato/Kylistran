@@ -1,14 +1,19 @@
 <div class="page">
   <h1>Library</h1>
 
-  <ul>
-    @for (book of books(); track book.slug) {
-      <li>
-        <a [routerLink]="[book.slug]">{{ book.title }}</a>
-        @if (book.description) {
-          <p>{{ book.description }}</p>
-        }
-      </li>
+  @for (section of sections(); track $index) {
+    @if (section.universeName) {
+      <h2>{{ section.universeName }}</h2>
     }
-  </ul>
+    <ul>
+      @for (book of section.books; track book.slug) {
+        <li>
+          <a [routerLink]="[book.slug]">{{ book.title }}</a>
+          @if (book.description) {
+            <p>{{ book.description }}</p>
+          }
+        </li>
+      }
+    </ul>
+  }
 </div>

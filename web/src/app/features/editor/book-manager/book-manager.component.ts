@@ -3,7 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 import { EditorAuthService } from '../../../core/editor-auth/editor-auth.service';
-import { AdminBookSummary, BookInput, EditorContentService } from '../editor-content.service';
+import { AdminBookSummary, AdminUniverseSummary, BookInput, EditorContentService } from '../editor-content.service';
 
 @Component({
   selector: 'app-book-manager',
@@ -18,11 +18,13 @@ export class BookManagerComponent {
   private readonly router = inject(Router);
 
   readonly books = signal<AdminBookSummary[]>([]);
+  readonly universes = signal<AdminUniverseSummary[]>([]);
   readonly error = signal<string | null>(null);
 
   readonly newSlug = signal('');
   readonly newTitle = signal('');
   readonly newDescription = signal('');
+  readonly newUniverseId = signal<number | null>(null);
 
   constructor() {
     void this.load();
@@ -30,7 +32,12 @@ export class BookManagerComponent {
 
   private async load(): Promise<void> {
     try {
-      this.books.set(await firstValueFrom(this.content.listBooks()));
+      const [books, universes] = await Promise.all([
+        firstValueFrom(this.content.listBooks()),
+        firstValueFrom(this.content.listUniverses()),
+      ]);
+      this.books.set(books);
+      this.universes.set(universes);
     } catch {
       this.error.set('Failed to load books.');
     }
@@ -42,11 +49,18 @@ export class BookManagerComponent {
     if (!slug || !title) return;
     try {
       await firstValueFrom(
-        this.content.createBook({ slug, title, description: this.newDescription().trim(), hidden: false }),
+        this.content.createBook({
+          slug,
+          title,
+          description: this.newDescription().trim(),
+          hidden: false,
+          universeId: this.newUniverseId(),
+        }),
       );
       this.newSlug.set('');
       this.newTitle.set('');
       this.newDescription.set('');
+      this.newUniverseId.set(null);
       this.error.set(null);
       await this.load();
     } catch {
@@ -60,6 +74,7 @@ export class BookManagerComponent {
       title: book.title,
       description: book.description ?? '',
       hidden: book.hidden,
+      universeId: book.universeId,
     };
     try {
       await firstValueFrom(this.content.updateBook(book.id, input));

@@ -1,0 +1,45 @@
+<div class="page editor">
+  <div class="editor__header">
+    <div>
+      <p><a routerLink="/editor">&larr; Editor</a></p>
+      <h1>Universes</h1>
+    </div>
+  </div>
+
+  @if (error()) {
+    <p class="editor__error">{{ error() }}</p>
+  }
+
+  <ul class="editor__list">
+    @for (universe of universes(); track universe.id; let i = $index) {
+      <li class="editor__row">
+        <div class="editor__reorder">
+          <button type="button" (click)="move(i, -1)" [disabled]="i === 0">&uarr;</button>
+          <button type="button" (click)="move(i, 1)" [disabled]="i === universes().length - 1">&darr;</button>
+        </div>
+        <input class="editor__name" [(ngModel)]="universe.name" (blur)="save(universe)" placeholder="Name" />
+        <input class="editor__slug" [(ngModel)]="universe.slug" (blur)="save(universe)" placeholder="slug" />
+        <input
+          class="editor__description"
+          [(ngModel)]="universe.description"
+          (blur)="save(universe)"
+          placeholder="Description (optional)"
+        />
+        <button type="button" class="editor__delete" (click)="remove(universe)">Delete</button>
+      </li>
+    }
+  </ul>
+
+  <form class="editor__new" (submit)="$event.preventDefault(); create()">
+    <h2>New universe</h2>
+    <input [ngModel]="newName()" (ngModelChange)="newName.set($event)" name="newName" placeholder="Name" />
+    <input [ngModel]="newSlug()" (ngModelChange)="newSlug.set($event)" name="newSlug" placeholder="slug" />
+    <input
+      [ngModel]="newDescription()"
+      (ngModelChange)="newDescription.set($event)"
+      name="newDescription"
+      placeholder="Description (optional)"
+    />
+    <button type="submit">Create</button>
+  </form>
+</div>

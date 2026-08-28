@@ -1,0 +1,78 @@
+.editor {
+  max-width: 90ch;
+}
+
+.editor__back {
+  background: none;
+  border: none;
+  color: var(--accent);
+  cursor: pointer;
+  font: inherit;
+  padding: 0;
+}
+
+.editor__error {
+  color: var(--accent);
+}
+
+.character-editor__meta {
+  display: flex;
+  gap: 1rem;
+  margin: 1rem 0;
+
+  label {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+  }
+}
+
+input,
+select,
+textarea {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: 0.4rem;
+  padding: 0.5rem 0.7rem;
+  font: inherit;
+  color: var(--text);
+}
+
+.character-editor__notes-label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.character-editor__notes {
+  font-family: ui-monospace, monospace;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  resize: vertical;
+}
+
+button {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: 0.4rem;
+  padding: 0.5rem 0.9rem;
+  cursor: pointer;
+}
+
+.character-editor__status {
+  color: var(--accent);
+}
+
+.character-editor__save {
+  margin-top: 1.5rem;
+  background: var(--accent);
+  color: var(--bg);
+  border: none;
+  padding: 0.7rem 1.4rem;
+  font-size: 1rem;
+}

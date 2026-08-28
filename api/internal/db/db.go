@@ -32,6 +32,10 @@ func migrate(conn *sql.DB) error {
 		!strings.Contains(err.Error(), "duplicate column name") {
 		return err
 	}
+	if _, err := conn.Exec(`ALTER TABLE books ADD COLUMN universe_id INTEGER REFERENCES universes(id)`); err != nil &&
+		!strings.Contains(err.Error(), "duplicate column name") {
+		return err
+	}
 	return nil
 }
 

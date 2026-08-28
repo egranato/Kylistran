@@ -1,0 +1,38 @@
+<div class="page editor">
+  <div class="editor__header">
+    <div>
+      <p><a routerLink="/editor">&larr; Editor</a></p>
+      <h1>Characters</h1>
+    </div>
+  </div>
+
+  @if (error()) {
+    <p class="editor__error">{{ error() }}</p>
+  }
+
+  <ul class="editor__list">
+    @for (character of characters(); track character.id; let i = $index) {
+      <li class="editor__row">
+        <div class="editor__reorder">
+          <button type="button" (click)="move(i, -1)" [disabled]="i === 0">&uarr;</button>
+          <button type="button" (click)="move(i, 1)" [disabled]="i === characters().length - 1">&darr;</button>
+        </div>
+        <a class="editor__character-link" [routerLink]="[character.id]">{{ character.name }}</a>
+        <span class="editor__universe">{{ character.universe?.name || '—' }}</span>
+        <button type="button" class="editor__delete" (click)="remove(character)">Delete</button>
+      </li>
+    }
+  </ul>
+
+  <form class="editor__new" (submit)="$event.preventDefault(); create()">
+    <h2>New character</h2>
+    <input [ngModel]="newName()" (ngModelChange)="newName.set($event)" name="newName" placeholder="Name" />
+    <select [ngModel]="newUniverseId()" (ngModelChange)="newUniverseId.set($event)" name="newUniverseId">
+      <option [ngValue]="null">No universe</option>
+      @for (universe of universes(); track universe.id) {
+        <option [ngValue]="universe.id">{{ universe.name }}</option>
+      }
+    </select>
+    <button type="submit">Create</button>
+  </form>
+</div>

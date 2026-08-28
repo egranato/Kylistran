@@ -43,6 +43,21 @@ func (h *Handlers) Register(mux *http.ServeMux) {
 	mux.Handle("GET /admin/chapters/{id}", admin(h.getAdminChapter))
 	mux.Handle("PUT /admin/chapters/{id}", admin(h.putChapter))
 	mux.Handle("DELETE /admin/chapters/{id}", admin(h.deleteChapter))
+
+	// Admin: universes
+	mux.Handle("GET /admin/universes", admin(h.listAdminUniverses))
+	mux.Handle("POST /admin/universes", admin(h.createUniverse))
+	mux.Handle("PATCH /admin/universes/reorder", admin(h.reorderUniverses))
+	mux.Handle("PATCH /admin/universes/{id}", admin(h.updateUniverse))
+	mux.Handle("DELETE /admin/universes/{id}", admin(h.deleteUniverse))
+
+	// Admin: characters
+	mux.Handle("GET /admin/characters", admin(h.listAdminCharacters))
+	mux.Handle("POST /admin/characters", admin(h.createCharacter))
+	mux.Handle("PATCH /admin/characters/reorder", admin(h.reorderCharacters))
+	mux.Handle("GET /admin/characters/{id}", admin(h.getAdminCharacter))
+	mux.Handle("PUT /admin/characters/{id}", admin(h.putCharacter))
+	mux.Handle("DELETE /admin/characters/{id}", admin(h.deleteCharacter))
 }
 
 func (h *Handlers) health(w http.ResponseWriter, r *http.Request) {

@@ -1,7 +1,11 @@
 <div class="page editor">
   <div class="editor__header">
     <h1>Editor</h1>
-    <button type="button" class="editor__logout" (click)="logout()">Sign out</button>
+    <div class="editor__header-links">
+      <a routerLink="/editor/universes">Universes</a>
+      <a routerLink="/editor/characters">Characters</a>
+      <button type="button" class="editor__logout" (click)="logout()">Sign out</button>
+    </div>
   </div>
 
   @if (error()) {
@@ -27,6 +31,16 @@
           <input type="checkbox" [(ngModel)]="book.hidden" (change)="save(book)" />
           Hidden
         </label>
+        <select
+          class="editor__universe"
+          [ngModel]="book.universeId ?? null"
+          (ngModelChange)="book.universeId = $event; save(book)"
+        >
+          <option [ngValue]="null">No universe</option>
+          @for (universe of universes(); track universe.id) {
+            <option [ngValue]="universe.id">{{ universe.name }}</option>
+          }
+        </select>
         <a class="editor__chapters-link" [routerLink]="[book.id]">Chapters &rarr;</a>
         <button type="button" class="editor__delete" (click)="remove(book)">Delete</button>
       </li>
