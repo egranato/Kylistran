@@ -1,9 +1,12 @@
 package handlers
 
 import (
+	"database/sql"
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"strconv"
+	"strings"
 
 	"kylistran-api/internal/models"
 )
@@ -99,6 +102,53 @@ func (h *Handlers) deleteUniverse(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	w.WriteHeader(http.StatusNoContent)
+}
+
+// exportUniverseCharacters renders every character in a universe as a single
+// markdown file (# universe name, then ## character name + notes per
+// character) for the author to save externally.
+func (h *Handlers) exportUniverseCharacters(w http.ResponseWriter, r *http.Request) {
+	id, err := strconv.ParseInt(r.PathValue("id"), 10, 64)
+	if err != nil {
+		writeError(w, http.StatusBadRequest, "invalid universe id")
+		return
+	}
+
+	var universeSlug, universeName string
+	err = h.db.QueryRow(`SELECT slug, name FROM universes WHERE id = ?`, id).Scan(&universeSlug, &universeName)
+	if err == sql.ErrNoRows {
+		writeError(w, http.StatusNotFound, "universe not found")
+		return
+	} else if err != nil {
+		writeError(w, http.StatusInternalServerError, "failed to load universe")
+		return
+	}
+
+	rows, err := h.db.Query(`SELECT name, notes FROM characters WHERE universe_id = ? ORDER BY position, id`, id)
+	if err != nil {
+		writeError(w, http.StatusInternalServerError, "failed to load characters")
+		return
+	}
+	defer rows.Close()
+
+	var sb strings.Builder
+	fmt.Fprintf(&sb, "# %s\n", universeName)
+	for rows.Next() {
+		var name, notes string
+		if err := rows.Scan(&name, &notes); err != nil {
+			writeError(w, http.StatusInternalServerError, "failed to read characters")
+			return
+		}
+		fmt.Fprintf(&sb, "\n## %s\n\n%s\n", name, strings.TrimSpace(notes))
+	}
+	if err := rows.Err(); err != nil {
+		writeError(w, http.StatusInternalServerError, "failed to read characters")
+		return
+	}
+
+	w.Header().Set("Content-Type", "text/markdown; charset=utf-8")
+	w.Header().Set("Content-Disposition", fmt.Sprintf(`attachment; filename="%s.md"`, universeSlug))
+	w.Write([]byte(sb.String()))
 }
 
 func (h *Handlers) reorderUniverses(w http.ResponseWriter, r *http.Request) {

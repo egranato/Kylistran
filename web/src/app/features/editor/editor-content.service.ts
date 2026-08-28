@@ -157,6 +157,10 @@ export class EditorContentService {
     return this.http.patch<void>(`${this.base}/admin/universes/reorder`, { order });
   }
 
+  exportUniverseCharacters(id: number): Observable<Blob> {
+    return this.http.get(`${this.base}/admin/universes/${id}/characters/export`, { responseType: 'blob' });
+  }
+
   listCharacters(): Observable<AdminCharacterSummary[]> {
     return this.http.get<AdminCharacterSummary[]>(`${this.base}/admin/characters`);
   }

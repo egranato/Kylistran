@@ -50,6 +50,7 @@ func (h *Handlers) Register(mux *http.ServeMux) {
 	mux.Handle("PATCH /admin/universes/reorder", admin(h.reorderUniverses))
 	mux.Handle("PATCH /admin/universes/{id}", admin(h.updateUniverse))
 	mux.Handle("DELETE /admin/universes/{id}", admin(h.deleteUniverse))
+	mux.Handle("GET /admin/universes/{id}/characters/export", admin(h.exportUniverseCharacters))
 
 	// Admin: characters
 	mux.Handle("GET /admin/characters", admin(h.listAdminCharacters))

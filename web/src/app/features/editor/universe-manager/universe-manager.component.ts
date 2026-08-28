@@ -71,6 +71,20 @@ export class UniverseManagerComponent {
     await this.load();
   }
 
+  async exportCharacters(universe: AdminUniverseSummary): Promise<void> {
+    try {
+      const blob = await firstValueFrom(this.content.exportUniverseCharacters(universe.id));
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${universe.slug}-characters.md`;
+      a.click();
+      URL.revokeObjectURL(url);
+    } catch {
+      this.error.set('Failed to export characters.');
+    }
+  }
+
   async move(index: number, direction: -1 | 1): Promise<void> {
     const universes = this.universes();
     const target = index + direction;

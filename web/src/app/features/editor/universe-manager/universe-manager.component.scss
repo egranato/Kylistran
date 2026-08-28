@@ -21,7 +21,7 @@
 
 .editor__row {
   display: grid;
-  grid-template-columns: auto 1fr 12ch 1fr auto;
+  grid-template-columns: auto 1fr 12ch 1fr auto auto;
   gap: 0.5rem;
   align-items: center;
 }
@@ -89,7 +89,7 @@ button {
       'name name'
       'slug slug'
       'description description'
-      'delete delete';
+      'export delete';
     gap: 0.6rem;
     border: 1px solid var(--border);
     border-radius: 0.6rem;
@@ -116,6 +116,10 @@ button {
 
   .editor__description {
     grid-area: description;
+  }
+
+  .editor__export {
+    grid-area: export;
   }
 
   .editor__delete {

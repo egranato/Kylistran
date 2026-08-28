@@ -25,6 +25,7 @@
           (blur)="save(universe)"
           placeholder="Description (optional)"
         />
+        <button type="button" class="editor__export" (click)="exportCharacters(universe)">Export</button>
         <button type="button" class="editor__delete" (click)="remove(universe)">Delete</button>
       </li>
     }
