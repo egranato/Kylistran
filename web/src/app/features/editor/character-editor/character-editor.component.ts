@@ -1,7 +1,8 @@
-import { Component, effect, inject, input, signal } from '@angular/core';
+import { Component, computed, effect, inject, input, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
+import { marked } from 'marked';
 import { AdminUniverseSummary, EditorContentService } from '../editor-content.service';
 
 @Component({
@@ -25,6 +26,9 @@ export class CharacterEditorComponent {
 
   readonly status = signal<string | null>(null);
   readonly error = signal<string | null>(null);
+
+  readonly previewing = signal(false);
+  readonly notesHtml = computed(() => marked.parse(this.notes(), { async: false }) as string);
 
   constructor() {
     // characterId is a router-bound input — deferred via effect() for the same
@@ -70,6 +74,10 @@ export class CharacterEditorComponent {
     } catch {
       this.error.set('Failed to save character.');
     }
+  }
+
+  togglePreview(): void {
+    this.previewing.update((v) => !v);
   }
 
   backToCharacters(): void {

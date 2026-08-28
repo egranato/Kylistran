@@ -24,8 +24,16 @@
       </label>
     </div>
 
-    <label class="character-editor__notes-label">
-      Notes
+    <div class="character-editor__notes-header">
+      <span class="character-editor__notes-label-text">Notes (Markdown)</span>
+      <button type="button" class="character-editor__preview-toggle" (click)="togglePreview()">
+        {{ previewing() ? 'Edit' : 'Preview' }}
+      </button>
+    </div>
+
+    @if (previewing()) {
+      <div class="character-editor__notes-preview" [innerHTML]="notesHtml()"></div>
+    } @else {
       <textarea
         class="character-editor__notes"
         [ngModel]="notes()"
@@ -33,7 +41,7 @@
         name="notes"
         rows="24"
       ></textarea>
-    </label>
+    }
 
     @if (error()) {
       <p class="editor__error">{{ error() }}</p>
