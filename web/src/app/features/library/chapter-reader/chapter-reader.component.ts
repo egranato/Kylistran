@@ -13,6 +13,37 @@ function escapeHtml(text: string): string {
     .replace(/>/g, '&gt;');
 }
 
+/**
+ * Drops author-only content before it reaches the reader: single paragraphs
+ * starting with "#", plus everything (including images) between a pair of
+ * "###"-only paragraphs. An unclosed trailing "###" hides the rest of the chapter.
+ */
+function filterReaderBlocks(blocks: ChapterBlock[]): ChapterBlock[] {
+  const visible: ChapterBlock[] = [];
+  let inCommentBlock = false;
+
+  for (const block of blocks) {
+    if (typeof block !== 'string') {
+      if (!inCommentBlock) {
+        visible.push(block);
+      }
+      continue;
+    }
+
+    const trimmed = block.trim();
+    if (trimmed === '###') {
+      inCommentBlock = !inCommentBlock;
+      continue;
+    }
+    if (inCommentBlock || trimmed.startsWith('#')) {
+      continue;
+    }
+    visible.push(block);
+  }
+
+  return visible;
+}
+
 @Component({
   selector: 'app-chapter-reader',
   standalone: true,
@@ -42,6 +73,7 @@ export class ChapterReaderComponent {
 
   readonly chapterNumber = computed(() => this.content.getChapterNumber(this.book(), this.chapterSlug()));
   readonly adjacent = computed(() => this.content.getAdjacentChapters(this.book(), this.chapterSlug()));
+  readonly visibleParagraphs = computed(() => filterReaderBlocks(this.chapter()?.paragraphs ?? []));
 
   constructor() {
     effect(() => {
@@ -62,10 +94,6 @@ export class ChapterReaderComponent {
 
   isImage(block: ChapterBlock): block is ChapterImage {
     return typeof block === 'object';
-  }
-
-  isAuthorComment(block: ChapterBlock): boolean {
-    return typeof block === 'string' && block.trimStart().startsWith('#');
   }
 
   formatParagraph(text: string): SafeHtml {

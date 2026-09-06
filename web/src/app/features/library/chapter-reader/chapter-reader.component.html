@@ -3,7 +3,7 @@
     <p><a [routerLink]="['/library', bookSlug()]">&larr; Chapters</a></p>
     <h1>{{ chapterTitle(chapter.title, chapterNumber()) }}</h1>
 
-    @for (block of chapter.paragraphs; track $index) {
+    @for (block of visibleParagraphs(); track $index) {
       @if (isImage(block)) {
         <figure class="reader__figure">
           <img [src]="block.src" [alt]="block.alt" loading="lazy" />
@@ -11,7 +11,7 @@
             <figcaption>{{ block.caption }}</figcaption>
           }
         </figure>
-      } @else if (!isAuthorComment(block)) {
+      } @else {
         <p [innerHTML]="formatParagraph(block)"></p>
       }
     }
