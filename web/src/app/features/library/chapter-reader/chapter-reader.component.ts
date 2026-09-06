@@ -1,9 +1,17 @@
 import { Component, computed, effect, inject, input } from '@angular/core';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { Router, RouterLink } from '@angular/router';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { combineLatest, switchMap } from 'rxjs';
 import { ChapterBlock, ChapterImage, ChapterSummary } from '../../../content/content.models';
 import { ContentService } from '../../../content/content.service';
+
+function escapeHtml(text: string): string {
+  return text
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+}
 
 @Component({
   selector: 'app-chapter-reader',
@@ -15,6 +23,7 @@ import { ContentService } from '../../../content/content.service';
 export class ChapterReaderComponent {
   private readonly content = inject(ContentService);
   private readonly router = inject(Router);
+  private readonly sanitizer = inject(DomSanitizer);
 
   readonly bookSlug = input.required<string>();
   readonly chapterSlug = input.required<string>();
@@ -57,5 +66,10 @@ export class ChapterReaderComponent {
 
   isAuthorComment(block: ChapterBlock): boolean {
     return typeof block === 'string' && block.trimStart().startsWith('#');
+  }
+
+  formatParagraph(text: string): SafeHtml {
+    const withItalics = escapeHtml(text).replace(/\*(\S(?:[^*]*\S)?)\*/g, '<i>$1</i>');
+    return this.sanitizer.bypassSecurityTrustHtml(withItalics);
   }
 }

@@ -12,7 +12,7 @@
           }
         </figure>
       } @else if (!isAuthorComment(block)) {
-        <p>{{ block }}</p>
+        <p [innerHTML]="formatParagraph(block)"></p>
       }
     }
 
